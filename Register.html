@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register for Daily Coin</title>
+    <link rel="stylesheet" href="../styles.css"> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="../register.js" defer></script> 
+</head>
+<style>
+/* --- REGISTRATION PAGE STYLES (Phase 2 Additions) --- */
+
+/* Keyframes for the background color shift */
+@keyframes backgroundShift {
+    0% { background-color: #343a40; } /* Dark Gray */
+    33% { background-color: #2c3e50; } /* Dark Blue/Gray */
+    66% { background-color: #4a4e69; } /* Deep Slate */
+    100% { background-color: #343a40; }
+}
+
+/* Apply the background animation to the body */
+.auth-container {
+    /* The main element wraps the form and coin */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 140px); /* Full viewport height minus header/footer */
+    padding: 2rem 5%;
+    animation: backgroundShift 20s infinite alternate; /* Slow, non-bright color change */
+}
+
+/* Translucent Registration Card */
+.register-card {
+    background-color: rgba(255, 255, 255, 0.15); /* White background with 15% opacity */
+    backdrop-filter: blur(10px); /* Creates the "frosted glass" look */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 3rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 450px;
+    text-align: center;
+    color: var(--light-text); /* Ensure text is visible on dark background */
+    z-index: 5; /* Keep it above the changing background */
+}
+
+.register-card h2 {
+    margin-bottom: 2rem;
+    color: var(--light-text);
+    font-size: 2rem;
+}
+
+/* Input Fields Styling */
+.input-group {
+    text-align: left;
+    margin-bottom: 1.5rem;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 5px;
+    background-color: rgba(0, 0, 0, 0.2); /* Slightly darker input field */
+    color: var(--light-text);
+    font-size: 1rem;
+}
+
+
+.input-group input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.register-btn {
+    width: 100%;
+    margin-top: 1rem;
+    font-size: 1.2rem;
+}
+
+.login-prompt {
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+}
+
+.login-prompt a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+/* Spinning Coin Animation */
+.coin-spinner {
+    font-size: 4rem;
+    color: #ffc107; /* Gold color */
+    margin-bottom: 1rem;
+    z-index: 5;
+    animation: coinSpin 4s infinite linear;
+}
+
+@keyframes coinSpin {
+    from { transform: rotateY(0deg); }
+    to { transform: rotateY(360deg); }
+}
+body{
+  color: skyblue;
+}
+
+
+</style>
+<body>
+
+    
+
+    <main class="auth-container">
+        
+        <div class="coin-spinner">
+            <i class="fas fa-coins"></i>
+        </div>
+
+        <div class="register-card">
+            <h2>Create Your DC Account</h2>
+            
+            <form action="#" method="POST">
+                <div class="input-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" placeholder="you@example.com" required>
+                </div>
+                
+                <div class="input-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" placeholder="Choose a username" required>
+                </div>
+                
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Min 8 characters" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary register-btn">Sign Up</button>
+            </form>
+
+            <p class="login-prompt">Already have an account? <a href="login.html">Login here</a></p>
+        </div>
+    </main>
+    
+    <footer>
+        <p>&copy; 2025 Daily Coin (DC). All rights reserved.</p>
+    </footer>
+
+</body>
+<script>
+// This file is currently empty, as the background color shift 
+// and coin spin are handled entirely by CSS for better performance.
+// We keep it here as a placeholder for future complex form validation 
+// or background interaction logic (e.g., parallax effects).
+
+console.log("Register page loaded. Dynamic background color shift handled by CSS.");
+
+</script>
+</html>

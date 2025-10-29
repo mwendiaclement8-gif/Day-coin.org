@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DC User Dashboard</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<style>
+/* Global & Variables (Assuming standard styles) */
+:root {
+--primary-color: #007bff; /* Blue */
+--secondary-color: #ffc107; /* Gold/Yellow */
+--dark-background: #1e1e2d;
+--light-text: #f8f9fa;
+--card-background: rgba(255, 255, 255, 0.9);
+--body-background: #f4f7f6; /* Light, clean background */
+}
+
+body {
+font-family: Arial, sans-serif;
+margin: 0;
+padding: 0;
+background-color: var(--body-background);
+color: #343a40;
+min-height: 100vh;
+}
+
+/* --- Header & Navigation Bar (Top) --- */
+.navbar {
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 15px 5%;
+background-color: var(--primary-color);
+color: var(--light-text);
+box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.logo a {
+font-size: 1.5rem;
+font-weight: bold;
+color: var(--light-text);
+text-decoration: none;
+}
+
+.auth-buttons a {
+text-decoration: none;
+color: var(--light-text);
+padding: 8px 15px;
+border: 1px solid var(--light-text);
+border-radius: 5px;
+margin-left: 10px;
+}
+
+/* --- Main Dashboard Content --- */
+main {
+padding: 2rem 5%;
+padding-bottom: 100px; /* Space for the bottom menu */
+}
+
+h1 {
+color: var(--primary-color);
+margin-bottom: 2rem;
+text-align: center;
+}
+
+/* --- Use Case Grid --- */
+.uses-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+gap: 30px;
+}
+
+.use-card {
+background: white;
+border-radius: 12px;
+box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+overflow: hidden;
+transition: transform 0.3s ease;
+}
+
+.use-card:hover {
+transform: translateY(-5px);
+box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.use-card-header {
+background-color: var(--primary-color);
+color: var(--light-text);
+padding: 15px 20px;
+display: flex;
+align-items: center;
+}
+
+.use-card-header i {
+font-size: 1.5rem;
+margin-right: 15px;
+}
+
+.use-card-content {
+padding: 20px;
+}
+
+.media-placeholder {
+width: 100%;
+height: 200px;
+background-color: #eee;
+margin-bottom: 15px;
+display: flex;
+justify-content: center;
+align-items: center;
+font-style: italic;
+color: #666;
+border-radius: 8px;
+overflow: hiden;
+}
+
+.media-placeholder img,
+.media-placeholder iframe {
+width: 100%;
+height: 100%;
+object-fit: cover;
+}
+
+/* --- Bottom Navigation Menu --- */
+.bottom-nav {
+position: fixed;
+bottom: 0;
+left: 0;
+width: 100%;
+background-color: var(--dark-background);
+box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.3);
+display: flex;
+justify-content: space-around;
+padding: 10px 0;
+z-index: 1000;
+}
+
+.nav-option {
+flex: 1;
+text-align: center;
+text-decoration: none;
+color: var(--light-text);
+padding: 8px 0;
+transition: background-color 0.2s;
+display: flex;
+flex-direction: column;
+align-items: center;
+font-size: 0.8rem;
+}
+
+.nav-option i {
+font-size: 1.5rem;
+margin-bottom: 4px;
+}
+
+.nav-option:hover {
+background-color: rgba(255, 255, 255, 0.1);
+color: var(--secondary-color);
+}
+
+/* Active option styling */
+.nav-option.active {
+color: var(--secondary-color);
+}
+
+</style>
+</head>
+<body>
+
+<header class="navbar">
+<div class="logo">
+<a href="index.html">Daily Coin (DC) Dashboard</a>
+</div>
+<div class="auth-buttons">
+<a href="login.html">Logout</a>
+</div>
+</header>
+
+<main>
+<h1>Welcome to Your DC Utility Hub</h1>
+<p style="text-align: center; margin-bottom: 40px; font-size: 1.1rem;">Discover the various real-world applications of Daily Coin (DC).</p>
+
+<div class="uses-grid">
+
+<div class="use-card">
+<div class="use-card-header">
+<i class="fas fa-gamepad"></i>
+<h3>Gaming & NFTs</h3>
+
+</div>
+<div class="use-card-content">
+<div class="media-placeholder">
+<div class="media-placeholder">
+    
+</div>
+
+<div class="media-placeholder">
+    <img src="Gamers.jpg" width="100%"  height="100%"alt="A screenshot of a person playing a blockchain game using Daily Coin.">
+</div>
+
+</div>
+<p>Use DC for in-game purchases, exclusive NFT drops, and cross-platform rewards in partner decentralized games.</p>
+</div>
+</div>
+
+<div class="use-card">
+<div class="use-card-header" style="background-color: #dc3545;">
+<i class="fas fa-dice"></i>
+<h3>Decentralized Betting</h3>
+</div>
+<div class="use-card-content">
+<div class="media-placeholder">
+<div class="media-placeholder">
+    
+</div>
+
+<div class="media-placeholder">
+    <img src="Betting.jpg" alt="A screenshot of a person playing a blockchain game using Daily Coin.">
+</div>
+
+</div>
+<p>Fund peer-to-peer prediction markets and decentralized betting platforms instantly with minimal fees.</p>
+</div>
+</div>
+
+<div class="use-card">
+<div class="use-card-header" style="background-color: #6c757d;">
+<i class="fas fa-chart-line"></i>
+<h3>Market Monitoring</h3>
+</div>
+<div class="use-card-content">
+<div class="media-placeholder">
+<div class="media-placeholder">
+    
+</div>
+
+<div class="media-placeholder">
+    <img src="Marketing.jpg" alt="A screenshot of a person playing a blockchain game using Daily Coin.">
+</div>
+
+</div>
+<p>Pay for premium access to advanced DC analytics tools and real-time market data monitoring services.</p>
+</div>
+</div>
+
+<div class="use-card">
+<div class="use-card-header" style="background-color: #28a745;">
+<i class="fas fa-exchange-alt"></i>
+<h3>Forex Trading</h3>
+</div>
+<div class="use-card-content">
+<div class="media-placeholder">
+<iframe width="100%" height="100%" src="https://www.youtube.com/embed/dQw4w9WgXcQ?controls=0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</div>
+<p>Use DC as a reliable collateral or stable unit for high-speed margin trading and crypto-Forex pairs.</p>
+</div>
+</div>
+
+<div class="use-card">
+<div class="use-card-header" style="background-color: #17a2b8;">
+<i class="fas fa-shopping-cart"></i>
+<h3>E-commerce & Retail</h3>
+</div>
+<div class="use-card-content">
+<div class="media-placeholder">
+<div class="media-placeholder">
+    
+</div>
+
+<div class="media-placeholder">
+    <img src="Commerce.jpg" alt="A screenshot of a person playing a blockchain game using Daily Coin.">
+</div>
+
+</div>
+<p>Pay for goods and services online and in-store instantly through our integrated payment gateway solutions.</p>
+</div>
+</div>
+
+<div class="use-card">
+<div class="use-card-header" style="background-color: #6f42c1;">
+<i class="fas fa-wallet"></i>
+<h3>General Utility</h3>
+</div>
+<div class="use-card-content">
+<div class="media-placeholder">
+<div class="media-placeholder">
+    
+</div>
+
+<div class="media-placeholder">
+    <img src="Retail.jpg" alt="A screenshot of a person playing a blockchain game using Daily Coin.">
+</div>
+
+</div>
+<p>Send money globally with lower fees and faster confirmation times than traditional banking rails.</p>
+</div>
+</div>
+
+</div>
+</main>
+
+<nav class="bottom-nav">
+
+<a href="about.html" class="nav-option">
+<i class="fas fa-info-circle"></i>
+<span>About</span>
+</a>
+
+<a href="#" class="nav-option">
+<i class="fas fa-history"></i>
+<span>History</span>
+</a>
+
+<a href="#" class="nav-option">
+<i class="fas fa-comments"></i>
+<span>Message</span>
+</a>
+
+<a href="#" class="nav-option">
+<i class="fas fa-wallet"></i>
+<span>Wallet</span>
+</a>
+
+<a href="#" class="nav-option">
+<i class="fas fa-user-circle"></i>
+<span>Profile</span>
+</a>
+</nav>
+
+<script>
+// Placeholder for future JavaScript functionality (e.g., fetching live data, handling tab clicks)
+document.addEventListener('DOMContentLoaded', () => {
+console.log("Dashboard loaded successfully. All components initialized.");
+
+// Example of how to highlight the active menu option (the 'About' link in the top bar)
+const currentPath = window.location.pathname.split('/').pop();
+if (currentPath === 'dashboard.html' || currentPath === '') {
+// Find and highlight the corresponding option in the bottom nav if applicable
+// Since this is the main dashboard, we'll just log it.
+}
+
+// Note: The YouTube embed above is an example placeholder. In a real app,
+// you'd dynamically load video content based on the use case.
+});
+</script>
+
+</body>
+</html>
