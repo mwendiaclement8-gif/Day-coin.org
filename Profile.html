@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User Profile - Phase 5</title>
+<style>
+/* CSS STYLES */
+body {
+font-family: sans-serif;
+margin: 0;
+background-color: #f4f7f9;
+}
+
+/* HEADER & NAVIGATION */
+.header {
+background-color: #ffffff;
+color: #333;
+padding: 15px;
+display: flex;
+align-items: center;
+box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.back-arrow {
+font-size: 24px;
+cursor: pointer;
+margin-right: 15px;
+color: #555;
+text-decoration: none;
+}
+.header h1 {
+font-size: 20px;
+margin: 0;
+font-weight: 500;
+}
+
+/* PROFILE CONTENT */
+.container {
+padding: 20px;
+max-width: 600px;
+margin: 0 auto;
+}
+.card {
+background-color: #fff;
+padding: 20px;
+border-radius: 8px;
+margin-bottom: 20px;
+box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+.profile-pic-section {
+text-align: center;
+margin-bottom: 20px;
+}
+.profile-pic {
+width: 100px;
+height: 100px;
+border-radius: 50%;
+object-fit: cover;
+border: 3px solid #007bff;
+margin-bottom: 10px;
+}
+.profile-pic-label {
+display: block;
+color: #007bff;
+cursor: pointer;
+font-size: 14px;
+}
+#pic-upload {
+display: none;
+}
+
+/* FORM STYLES */
+.form-group {
+margin-bottom: 15px;
+}
+.form-group label {
+display: block;
+margin-bottom: 5px;
+font-weight: bold;
+font-size: 14px;
+color: #555;
+}
+.form-group input,
+.form-group textarea {
+width: 100%;
+padding: 10px;
+border: 1px solid #ddd;
+border-radius: 4px;
+box-sizing: border-box;
+font-size: 16px;
+}
+.read-only-field {
+background-color: #e9ecef;
+color: #6c757d;
+border: 1px solid #ced4da;
+}
+.btn-update {
+background-color: #28a745;
+color: white;
+padding: 10px 15px;
+border: none;
+border-radius: 4px;
+cursor: pointer;
+font-size: 16px;
+width: 100%;
+margin-top: 10px;
+}
+.btn-password {
+background-color: #007bff;
+margin-top: 15px;
+}
+.btn-update:hover {
+opacity: 0.9;
+}
+
+/* MODAL FOR PASSWORD CHANGE */
+.modal {
+display: none;
+position: fixed;
+z-index: 1;
+left: 0;
+top: 0;
+width: 100%;
+height: 100%;
+overflow: auto;
+background-color: rgba(0,0,0,0.4);
+}
+.modal-content {
+background-color: #fefefe;
+margin: 15% auto;
+padding: 20px;
+border: 1px solid #888;
+width: 80%;
+max-width: 400px;
+border-radius: 8px;
+}
+.close-btn {
+color: #aaa;
+float: right;
+font-size: 28px;
+font-weight: bold;
+cursor: pointer;
+}
+</style>
+</head>
+<body>
+
+<div id="profile-header" class="header">
+<a href="#" class="back-arrow" onclick="goToDashboard()">&larr;</a>
+<h1>My Profile</h1>
+</div>
+
+<div class="container">
+
+<div class="card profile-pic-section">
+<img id="current-profile-pic" src="https://via.placeholder.com/100" alt="Profile Picture" class="profile-pic">
+<input type="file" id="pic-upload" accept="image/*" onchange="previewProfilePic(event)">
+<label for="pic-upload" class="profile-pic-label">Change Profile Picture</label>
+</div>
+
+<div class="card">
+<h2>Registered Details</h2>
+<div class="form-group">
+<label for="username">Username</label>
+<input type="text" id="username" value="user_handle123" class="read-only-field" readonly>
+</div>
+<div class="form-group">
+<label for="email">Email</label>
+<input type="email" id="email" value="user.email@example.com" class="read-only-field" readonly>
+</div>
+</div>
+
+<div class="card">
+<h2>Bio & Payment Info</h2>
+<div class="form-group">
+<label for="bio">Bio</label>
+<textarea id="bio" rows="4" placeholder="Tell us about yourself...">Software developer and crypto enthusiast.</textarea>
+</div>
+<div class="form-group">
+<label for="mpesa-phone">M-Pesa Phone No.</label>
+<input type="text" id="mpesa-phone" value="0712345678" placeholder="e.g., 0712345678">
+</div>
+<div class="form-group">
+<label for="bank-details">Other Banking Details</label>
+<input type="text" id="bank-details" placeholder="Bank Name, Account Number">
+</div>
+<button class="btn-update" onclick="saveDetails()">Save Profile Details</button>
+</div>
+
+<div class="card">
+<h2>Security</h2>
+<button class="btn-update btn-password" onclick="openPasswordModal()">Change Password</button>
+</div>
+</div>
+
+<div id="password-modal" class="modal">
+<div class="modal-content">
+<span class="close-btn" onclick="closePasswordModal()">&times;</span>
+<h3>Change Password</h3>
+<div class="form-group">
+<label for="current-password">Current Password</label>
+<input type="password" id="current-password">
+</div>
+<div class="form-group">
+<label for="new-password">New Password</label>
+<input type="password" id="new-password">
+</div>
+<div class="form-group">
+<label for="confirm-password">Confirm New Password</label>
+<input type="password" id="confirm-password">
+</div>
+<button class="btn-update" onclick="changePassword()">Submit New Password</button>
+</div>
+</div>
+
+<script>
+// JAVASCRIPT LOGIC
+
+// =================================================================
+// 1. DASHBOARD NAVIGATION LOGIC (CLICK & SWIPE)
+// =================================================================
+
+/**
+* Function to handle navigation back to the Dashboard.
+* Called by the top-left arrow click and the swipe gesture.
+*/
+function goToDashboard() {
+// **ACTION:** In a real application, you would replace the alert
+window.location.href = "dashboard.html";
+
+}
+
+// SWIPE GESTURE LOGIC: Detects a left-to-right swipe on the body
+let touchstartX = 0;
+let touchendX = 0;
+const minSwipeDistance = 75; // Minimum pixels to count as a swipe
+
+document.body.addEventListener('touchstart', e => {
+touchstartX = e.changedTouches[0].screenX;
+}, false);
+
+document.body.addEventListener('touchend', e => {
+touchendX = e.changedTouches[0].screenX;
+// Check if the swipe was significantly rightward
+if (touchendX > touchstartX && (touchendX - touchstartX) > minSwipeDistance) {
+goToDashboard(Dashboard.html);
+}
+}, false);
+
+
+// =================================================================
+// 2. PROFILE PICTURE LOGIC
+// =================================================================
+function previewProfilePic(event) {
+const file = event.target.files[0];
+if (file) {
+const reader = new FileReader();
+reader.onload = function(e) {
+document.getElementById('current-profile-pic').src = e.target.result;
+alert("Profile picture previewed! Click 'Save Profile Details' to make it permanent.");
+}
+reader.readAsDataURL(file);
+}
+}
+
+// =================================================================
+// 3. DETAILS SAVE LOGIC
+// =================================================================
+function saveDetails() {
+const bio = document.getElementById('bio').value;
+const mpesa = document.getElementById('mpesa-phone').value;
+const bank = document.getElementById('bank-details').value;
+
+// Simple validation example
+if (mpesa.length < 9) {
+alert("Please enter a valid M-Pesa phone number.");
+return;
+}
+
+// In a real application, you would send this data to a server API.
+console.log("Saving Details:", { bio, mpesa, bank });
+alert("Profile details saved successfully!");
+}
+
+// =================================================================
+// 4. PASSWORD MODAL LOGIC
+// =================================================================
+const modal = document.getElementById('password-modal');
+
+function openPasswordModal() {
+modal.style.display = "block";
+}
+
+function closePasswordModal() {
+modal.style.display = "none";
+}
+
+// Close the modal if the user clicks anywhere outside of it
+window.onclick = function(event) {
+if (event.target == modal) {
+closePasswordModal();
+}
+}
+
+function changePassword() {
+const current = document.getElementById('current-password').value;
+const newPass = document.getElementById('new-password').value;
+const confirmPass = document.getElementById('confirm-password').value;
+
+if (!current || !newPass || !confirmPass) {
+alert("All password fields are required.");
+return;
+}
+
+if (newPass !== confirmPass) {
+alert("New password and confirmation password do not match!");
+return;
+}
+
+// In a real app, you'd send current, newPass to the server.
+console.log("Password change requested.");
+alert("Password change successful! (Requires server implementation)");
+
+// Clear fields and close modal on success
+document.getElementById('current-password').value = '';
+document.getElementById('new-password').value = '';
+document.getElementById('confirm-password').value = '';
+closePasswordModal();
+}
+
+</script>
+</body>
+</html>
