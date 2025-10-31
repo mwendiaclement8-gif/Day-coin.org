@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day Coin - The Future of Digital Transactions</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Montserrat:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<style>
+/* --- Global Styles --- */
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #e9eff5; /* Light blue-gray background */
+    color: #333;
+    line-height: 1.6;
+}
+
+.container {
+    width: 90%;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px 0;
+}
+
+/* --- Header --- */
+header {
+    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%); /* Gold to Orange gradient */
+    color: #333; /* Dark text for contrast */
+    padding: 50px 0;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+header h1 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 3.5em;
+    margin-bottom: 5px;
+    letter-spacing: 2px;
+}
+
+header h1 i {
+    margin-right: 15px;
+    color: #fff; /* White icon */
+    text-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+
+header p {
+    font-size: 1.4em;
+    opacity: 0.9;
+    font-weight: 500;
+}
+
+/* --- Main Content Cards --- */
+main {
+    padding-top: 40px;
+    padding-bottom: 60px;
+}
+
+.info-card {
+    background-color: #ffffff;
+    border-radius: 15px;
+    padding: 35px;
+    margin-bottom: 30px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    border-left: 8px solid #FFA500; /* Orange accent */
+}
+
+.info-card h2 {
+    font-family: 'Montserrat', sans-serif;
+    color: #333;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 15px;
+    margin-top: 0;
+    font-size: 2em;
+    display: flex;
+    align-items: center;
+}
+
+.info-card h2 i {
+    margin-right: 15px;
+    color: #FFA500;
+    font-size: 1.2em;
+}
+
+.card-content {
+    padding-top: 15px;
+}
+
+/* --- Specifics (Specs) --- */
+.specs {
+    margin-top: 25px;
+    padding: 20px;
+    background-color: #f8fbfd;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    border: 1px dashed #cfe2f3;
+}
+
+.specs div {
+    padding: 5px 15px;
+    font-size: 1.0em;
+    font-weight: bold;
+    color: #555;
+}
+
+/* --- Developer Section --- */
+.developer-info {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    flex-wrap: wrap; /* Allows wrapping on smaller screens */
+}
+
+.developer-profile {
+    text-align: center;
+    min-width: 180px;
+}
+
+.profile-pic {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 5px solid #FFA500;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    margin-bottom: 15px;
+}
+
+.developer-profile h3 {
+    margin: 5px 0;
+    font-size: 1.8em;
+    color: #333;
+}
+
+.developer-profile .role {
+    font-style: italic;
+    color: #666;
+    font-size: 0.9em;
+}
+
+.developer-details {
+    flex-grow: 1;
+    font-size: 1.1em;
+}
+
+.developer-details p strong {
+    color: #007bff; /* Blue for emphasis */
+}
+
+/* --- Use Cases Grid --- */
+.use-cases-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    margin-top: 30px;
+}
+
+.use-case-item {
+    background-color: #fcfcfc;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 25px;
+    text-align: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.use-case-item:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+}
+
+.use-case-item i {
+    font-size: 3.5em;
+    color: #FFD700; /* Gold */
+    margin-bottom: 15px;
+}
+
+.use-case-item h3 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.5em;
+    color: #333;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.use-case-item p {
+    font-size: 0.95em;
+    color: #555;
+}
+
+/* --- Roadmap Button --- */
+#learn-more-btn {
+    display: block;
+    width: 250px;
+    margin: 30px auto 10px;
+    padding: 15px 25px;
+    background: linear-gradient(45deg, #007bff 0%, #0056b3 100%); /* Blue gradient */
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.4);
+}
+
+#learn-more-btn:hover {
+    background: linear-gradient(45deg, #0056b3 0%, #007bff 100%);
+    box-shadow: 0 8px 20px rgba(0, 123, 255, 0.6);
+    transform: translateY(-2px);
+}
+
+
+/* --- Footer --- */
+footer {
+    background-color: #343a40; /* Dark Gray */
+    color: white;
+    text-align: center;
+    padding: 25px 0;
+    font-size: 0.9em;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+}
+
+hr {
+    border: none;
+    border-top: 1px dashed #c0c0c0;
+    margin: 40px 0;
+}
+
+/* --- Media Queries for Responsiveness --- */
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 2.5em;
+    }
+    header p {
+        font-size: 1em;
+    }
+    .info-card {
+        padding: 25px;
+    }
+    .info-card h2 {
+        font-size: 1.6em;
+        text-align: center;
+        flex-direction: column;
+    }
+    .info-card h2 i {
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+    .developer-info {
+        flex-direction: column;
+        text-align: center;
+    }
+    .developer-details {
+        text-align: center;
+    }
+    .specs {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+    .use-cases-grid {
+        grid-template-columns: 1fr;
+    }
+    #learn-more-btn {
+        width: 80%;
+    }
+}
+
+@media (max-width: 480px) {
+    header h1 {
+        font-size: 2em;
+    }
+    .profile-pic {
+        width: 120px;
+        height: 120px;
+    }
+    .developer-profile h3 {
+        font-size: 1.5em;
+    }
+}
+
+</style>
+<body>
+    <header>
+        <div class="container">
+            <h1><i class="fas fa-sun"></i> Day Coin</h1>
+            <p>Your Gateway to a Decentralized Tomorrow</p>
+        </div>
+    </header>
+
+    <main class="container">
+        
+        <section id="introduction" class="info-card">
+            <h2>🌟 Introducing Day Coin</h2>
+            <div class="card-content">
+                <p>Day Coin is an innovative digital currency designed for a myriad of real-world and online applications. Built on a secure and efficient blockchain, Day Coin offers fast, transparent, and low-cost transactions, empowering users across various digital ecosystems. From immersive gaming experiences to secure betting, seamless e-commerce, and dynamic trading, Day Coin is engineered to be your everyday cryptocurrency.</p>
+                <div class="specs">
+                    <div><strong>Ticker:</strong> DAY</div>
+                    <div><strong>Blockchain:</strong> [Your Chosen Blockchain, e.g., Binance Smart Chain, Ethereum, Solana]</div>
+                    <div><strong>Total Supply:</strong> [e.g., 1,000,000,000 DAY]</div>
+                </div>
+            </div>
+        </section>
+        
+        <hr>
+
+        <section id="developer" class="info-card">
+            <h2>💡 The Visionary Behind Day Coin</h2>
+            <div class="card-content developer-info">
+                <div class="developer-profile">
+                    <img src="clement.jpg" alt="Clement Mwendia (Alpha Prime)" class="profile-pic">
+                    <h3>Clement Mwendia <br> (aka Alpha Prime)</h3>
+                    <p class="role">Lead Developer & Founder</p>
+                </div>
+                <div class="developer-details">
+                    <p>Day Coin was conceived and developed by the brilliant mind of **Clement Mwendia**, known in the crypto community as **Alpha Prime**. At the remarkable age of **18 years**, Clement officially launched Day Coin in **October 2025**, demonstrating an extraordinary blend of foresight, technical prowess, and a deep understanding of the decentralized future.</p>
+                    <p>His vision for Day Coin centers on creating a versatile and accessible digital currency that transcends traditional financial barriers and fosters innovation across multiple industries.</p>
+                </div>
+            </div>
+        </section>
+
+        <hr>
+
+        <section id="uses" class="info-card">
+            <h2>🌐 Unlock the Potential: Day Coin Use Cases</h2>
+            <div class="card-content">
+                <p>Day Coin is more than just a cryptocurrency; it's a utility token designed to enhance various digital experiences. Here’s how Day Coin can be seamlessly integrated into your daily life:</p>
+                
+                <div class="use-cases-grid">
+                    <div class="use-case-item">
+                        <i class="fas fa-gamepad"></i>
+                        <h3>Gaming</h3>
+                        <p>Use Day Coin to purchase in-game assets, unlock exclusive content, participate in play-to-earn models, and facilitate peer-to-peer trading within your favorite games. Experience true ownership of your digital valuables.</p>
+                    </div>
+                    <div class="use-case-item">
+                        <i class="fas fa-dice"></i>
+                        <h3>Betting & Wagering</h3>
+                        <p>Engage in decentralized betting platforms with Day Coin. Enjoy transparent odds, fast payouts, and enhanced security without intermediaries. Day Coin provides a fair and verifiable environment for all your wagering needs.</p>
+                    </div>
+                    <div class="use-case-item">
+                        <i class="fas fa-shopping-cart"></i>
+                        <h3>Buying & Selling (E-commerce)</h3>
+                        <p>Shop online or sell your products using Day Coin. Benefit from lower transaction fees compared to traditional payment methods, faster settlements, and enhanced privacy. Day Coin makes global e-commerce more accessible and efficient.</p>
+                    </div>
+                    <div class="use-case-item">
+                        <i class="fas fa-chart-line"></i>
+                        <h3>Trading & Investment</h3>
+                        <p>Trade Day Coin on various cryptocurrency exchanges. Utilize its liquidity and potential for growth as part of your digital asset portfolio. Participate in a dynamic market that operates 24/7 with transparent pricing.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <hr>
+
+        <section id="roadmap" class="info-card">
+            <h2>🗺️ Future & Roadmap</h2>
+            <div class="card-content">
+                <p>The journey for Day Coin has just begun. Our roadmap includes expanding partnerships in the gaming and e-commerce sectors, developing decentralized applications (dApps) that leverage Day Coin, and continuously eu7nhancing the underlying blockchain technology to ensure scalability and security. We are committed to fostering a vibrant and engaged community.</p>
+                <button id="learn-more-btn"><a href="Dashboard.html">Join Our Community</button>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; <span id="current-year"></span> Day Coin. Developed by Alpha Prime.</p>
+        </div>
+    </footer>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+    // Update current year in the footer
+    const currentYearElement = document.getElementById('current-year');
+    if (currentYearElement) {
+        currentYearElement.textContent = new Date().getFullYear();
+    }
+
+    // Optional: Smooth scroll for navigation (if you add nav links later)
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            document.querySelector(this.getAttribute('href')).scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+    });
+
+    console.log("Day Coin Website script loaded!");
+    console.log("Developed by Clement Mwendia (Alpha Prime) in October 2025.");
+});
+
+    </script>
+</body>
+</html>
