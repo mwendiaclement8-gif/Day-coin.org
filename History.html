@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phase 7: History & Activity Log</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+    
+    <style>
+        /* ------------------- CSS STYLES (Reusing Wallet Colors) ------------------- */
+        :root {
+            --primary-color: #007bff;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --warning-color: #ffc107;
+            --background-color: #f8f9fa;
+            --card-background: #ffffff;
+            --border-color: #e9ecef;
+            --info-color: #17a2b8;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: #343a40;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: var(--card-background);
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        /* --- Header --- */
+        .header {
+            display: flex;
+            align-items: center;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .back-arrow-link { 
+            font-size: 24px;
+            cursor: pointer;
+            margin-right: 15px;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .title {
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .card-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .info-card {
+            flex: 1;
+            padding: 15px;
+            border-radius: 8px;
+            color: white;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            font-weight: 600;
+        }
+        
+        .longevity-card { background-color: var(--info-color); }
+        .activity-graph-card { background-color: var(--card-background); padding: 20px; border: 1px solid var(--border-color);}
+
+        /* --- Tables --- */
+        .data-table-container {
+            overflow-x: auto;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        .data-table th, .data-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .data-table th {
+            background-color: #e9ecef;
+            color: #495057;
+            font-weight: 600;
+        }
+
+        .data-table tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .status-login { background-color: var(--success-color); }
+        .status-logout { background-color: var(--danger-color); }
+        .status-deposit { background-color: var(--info-color); }
+        .status-bet { background-color: var(--warning-color); }
+        .status-buy { background-color: var(--primary-color); }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <a href="Dashboard.html" class="back-arrow-link" title="Go to Dashboard">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <h1 class="title">Activity & History Log</h1>
+        </div>
+
+        <h2 class="section-title">System Metrics</h2>
+        <div class="card-row">
+            <div class="info-card longevity-card">
+                <div style="font-size: 14px; opacity: 0.8;">DC Currency Built Since:</div>
+                <div style="font-size: 24px;" id="dc-longevity">Loading...</div>
+            </div>
+            <div class="info-card longevity-card" style="background-color: var(--primary-color);">
+                <div style="font-size: 14px; opacity: 0.8;">Total Activity Entries:</div>
+                <div style="font-size: 24px;" id="total-activities">...</div>
+            </div>
+        </div>
+
+        <h2 class="section-title">Login Duration Analysis (Minutes)</h2>
+        <div class="activity-graph-card">
+            <canvas id="loginDurationChart"></canvas>
+        </div>
+
+        <h2 class="section-title">Comprehensive Activity Log</h2>
+        <div class="data-table-container">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Date & Time</th>
+                        <th>User ID</th>
+                        <th>Activity Type</th>
+                        <th>Details</th>
+                        <th>Amount (DC/KSH)</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="activity-table-body">
+                    <tr><td colspan="6" style="text-align: center;">Loading activity data...</td></tr>
+                </tbody>
+            </table>
+        </div>
+        
+    </div>
+
+    <script>
+        // --- DATA SIMULATION ---
+        
+        // Simulated DC Currency build date (e.g., 3 years ago)
+        const DC_BUILD_DATE = new Date('2022-10-31T00:00:00Z'); 
+        
+        // Simulated comprehensive activity log
+        const activityLog = [
+            // User Logins/Logouts
+            { id: 1, dateTime: '2025-10-31 09:00', userId: 'user123', type: 'Login', details: 'Session Start', amount: '-', status: 'status-login' },
+            { id: 2, dateTime: '2025-10-31 09:45', userId: 'user123', type: 'Logout', details: 'Session End', amount: '-', status: 'status-logout' },
+            // Financial Transactions
+            { id: 3, dateTime: '2025-10-30 14:30', userId: 'user123', type: 'Deposit', details: 'M-Pesa Top-up', amount: 'KSH 5,000', status: 'status-deposit' },
+            { id: 4, dateTime: '2025-10-30 14:35', userId: 'user123', type: 'Buy', details: 'Bought 50 DC', amount: 'DC 50', status: 'status-buy' },
+            { id: 5, dateTime: '2025-10-30 18:00', userId: 'user123', type: 'Bet', details: 'Bet on Football', amount: 'DC 5', status: 'status-danger' },
+            { id: 6, dateTime: '2025-10-29 11:15', userId: 'user123', type: 'Investment', details: 'Crypto Staking', amount: 'DC 100', status: 'status-info' },
+            { id: 7, dateTime: '2025-10-29 17:00', userId: 'user123', type: 'Withdraw', details: 'Bank Transfer', amount: 'KSH 2,000', status: 'status-danger' },
+        ];
+        
+        // Simulated daily login durations in minutes for the last 7 days
+        const loginDurations = {
+            dates: ['Oct 25', 'Oct 26', 'Oct 27', 'Oct 28', 'Oct 29', 'Oct 30', 'Oct 31'],
+            duration: [45, 120, 90, 30, 180, 60, 45] // in minutes
+        };
+
+
+        // --- RENDERING FUNCTIONS ---
+
+        function updateActivityTable() {
+            const tableBody = document.getElementById('activity-table-body');
+            document.getElementById('total-activities').textContent = activityLog.length;
+
+            tableBody.innerHTML = activityLog.map(activity => {
+                // Determine CSS class for status badge
+                const statusClass = activity.status; 
+                
+                return `
+                    <tr>
+                        <td>${activity.dateTime}</td>
+                        <td>${activity.userId}</td>
+                        <td>${activity.type}</td>
+                        <td>${activity.details}</td>
+                        <td>${activity.amount}</td>
+                        <td><span class="status-badge ${statusClass}">${activity.type}</span></td>
+                    </tr>
+                `;
+            }).join('');
+        }
+        
+        function renderLongevityMetric() {
+            const now = new Date();
+            const diffTime = Math.abs(now - DC_BUILD_DATE);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+            
+            const years = Math.floor(diffDays / 365);
+            const remainingDays = diffDays % 365;
+            
+            let display = '';
+            if (years > 0) {
+                display += `${years} Year${years !== 1 ? 's' : ''}, `;
+            }
+            display += `${remainingDays} Day${remainingDays !== 1 ? 's' : ''}`;
+            
+            document.getElementById('dc-longevity').textContent = display;
+        }
+
+        function renderLoginDurationChart() {
+            const ctx = document.getElementById('loginDurationChart').getContext('2d');
+            
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: loginDurations.dates,
+                    datasets: [{
+                        label: 'Login Duration (Minutes)',
+                        data: loginDurations.duration,
+                        backgroundColor: 'rgba(0, 123, 255, 0.7)',
+                        borderColor: 'rgba(0, 123, 255, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Minutes Logged In'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        title: {
+                            display: true,
+                            text: 'User Login Duration Over Last 7 Days'
+                        }
+                    }
+                }
+            });
+        }
+
+        // --- INITIALIZATION ---
+        window.onload = function() {
+            updateActivityTable();
+            renderLongevityMetric();
+            renderLoginDurationChart();
+        };
+
+    </script>
+</body>
+</html>
