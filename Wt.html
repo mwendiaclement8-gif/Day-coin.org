@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phase 6: The Wallet</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* ------------------- CSS STYLES ------------------- */
+        :root {
+            --primary-color: #007bff;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --warning-color: #ffc107;
+            --background-color: #f8f9fa;
+            --card-background: #ffffff;
+            --border-color: #e9ecef;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: #343a40;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: var(--card-background);
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        /* --- Header --- */
+        .header {
+            display: flex;
+            align-items: center;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        /* Adjusted class name to match the new 'a' tag */
+        .back-arrow-link { 
+            font-size: 24px;
+            cursor: pointer;
+            margin-right: 15px;
+            color: var(--primary-color);
+            text-decoration: none; /* Remove underline from the link */
+        }
+        
+        .back-arrow-link:hover {
+             opacity: 0.8;
+        }
+
+        .title {
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        /* --- Sections --- */
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .card {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid var(--border-color);
+        }
+        
+        /* --- Profile Info --- */
+        .info-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+        
+        .info-row i {
+            width: 25px;
+            color: var(--primary-color);
+        }
+
+        /* --- Balances --- */
+        .balance-container {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .balance-card {
+            flex: 1;
+            padding: 20px;
+            border-radius: 8px;
+            color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .ksh-balance {
+            background-color: #009688; /* Teal for KSH */
+        }
+
+        .dc-balance {
+            background-color: var(--primary-color); /* Blue for DC */
+        }
+
+        .balance-currency {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        .balance-amount {
+            font-size: 32px;
+            font-weight: 700;
+            margin-top: 5px;
+        }
+
+        /* --- Actions --- */
+        .actions-container {
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            gap: 10px;
+        }
+
+        .action-button {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 15px 10px;
+            border-radius: 8px;
+            background-color: var(--card-background);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: background-color 0.2s;
+            width: 23%;
+        }
+
+        .action-button:hover {
+            background-color: #f1f1f1;
+        }
+
+        .action-icon {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+
+        .action-button[data-action="Deposit"] .action-icon { color: var(--success-color); }
+        .action-button[data-action="Withdraw"] .action-icon { color: var(--danger-color); }
+        .action-button[data-action="Convert"] .action-icon { color: var(--warning-color); }
+        .action-button[data-action="Send"] .action-icon { color: var(--primary-color); }
+
+        .action-label {
+            font-size: 13px;
+            font-weight: 500;
+        }
+        
+        /* --- Transactions --- */
+        .transaction-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px dashed var(--border-color);
+        }
+
+        .transaction-item:last-child {
+            border-bottom: none;
+        }
+
+        .transaction-details {
+            flex-grow: 1;
+            padding-left: 10px;
+        }
+
+        .transaction-type {
+            font-weight: 600;
+        }
+
+        .transaction-date {
+            font-size: 12px;
+            color: #6c757d;
+        }
+
+        .transaction-amount {
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .credit { color: var(--success-color); }
+        .debit { color: var(--danger-color); }
+        .status { font-size: 12px; color: #6c757d; text-align: right; }
+
+        /* --- Modal Styles --- */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: none; /* Hidden by default */
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background-color: var(--card-background);
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .close-button {
+            font-size: 24px;
+            cursor: pointer;
+            color: #6c757d;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        .readonly-field {
+            background-color: #e9ecef;
+            color: #6c757d;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        
+        .conversion-info {
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .btn-submit {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-submit:hover {
+            background-color: #0056b3;
+        }
+        
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <a href="Dashboard.html" class="back-arrow-link" title="Go to Dashboard">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <h1 class="title">My Digital Wallet</h1>
+        </div>
+
+        <div class="section profile-info">
+            <h2 class="section-title">Profile Information</h2>
+            <div class="card">
+                <div class="info-row">
+                    <i class="fas fa-phone"></i>
+                    <span id="profile-phone">Phone No: **+2547XXXXXXXX**</span>
+                </div>
+                <div class="info-row">
+                    <i class="fas fa-credit-card"></i>
+                    <span>Credit Cards Linked:</span>
+                </div>
+                <ul id="credit-cards-list" style="list-style-type: none; padding-left: 25px; margin-top: 5px;">
+                    </ul>
+            </div>
+        </div>
+
+        <div class="section balances">
+            <h2 class="section-title">My Balances</h2>
+            <div class="balance-container">
+                <div class="balance-card ksh-balance">
+                    <div class="balance-currency">KSH Balance</div>
+                    <div class="balance-amount" id="balance-ksh">0.00</div>
+                </div>
+                <div class="balance-card dc-balance">
+                    <div class="balance-currency">Digital Currency (DC) Balance</div>
+                    <div class="balance-amount" id="balance-dc">0.00</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section actions">
+            <h2 class="section-title">Quick Actions</h2>
+            <div class="actions-container">
+                <div class="action-button" data-action="Deposit" onclick="openModal('Deposit')">
+                    <i class="fas fa-plus-circle action-icon"></i>
+                    <span class="action-label">Deposit (KSH)</span>
+                </div>
+                <div class="action-button" data-action="Withdraw" onclick="openModal('Withdraw')">
+                    <i class="fas fa-minus-circle action-icon"></i>
+                    <span class="action-label">Withdraw (KSH)</span>
+                </div>
+                <div class="action-button" data-action="Convert" onclick="openModal('Convert')">
+                    <i class="fas fa-exchange-alt action-icon"></i>
+                    <span class="action-label">Convert (KSH to DC)</span>
+                </div>
+                <div class="action-button" data-action="Send" onclick="openModal('Send')">
+                    <i class="fas fa-paper-plane action-icon"></i>
+                    <span class="action-label">Send (DC)</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section history">
+            <h2 class="section-title">Transaction History</h2>
+            <div class="card">
+                <div id="transactions-list">
+                    <p style="text-align: center; color: #6c757d;">Loading transactions...</p>
+                    </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="actionModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Action</h3>
+                <span class="close-button" onclick="closeModal()">&times;</span>
+            </div>
+            <div id="modalBody">
+                </div>
+        </div>
+    </div>
+
+
+    <script>
+        // --- DATA SIMULATION ---
+        const EXCHANGE_RATE = 20; // 1 DC = 20 KSH 
+
+        let profile = {
+            phoneNumber: '+2547XXXXXXXX',
+            creditCards: [
+                { id: 'cc1', lastFour: '4567', type: 'VISA' },
+                { id: 'cc2', lastFour: '1234', type: 'Mastercard' },
+            ],
+        };
+
+        let balances = {
+            KSH: 15000.00,
+            DC: 500.00, 
+        };
+
+        let transactions = [
+            { id: 't1', type: 'Deposit', amount: 5000, currency: 'KSH', date: '2025-10-31', status: 'Completed', flow: 'credit' },
+            { id: 't2', type: 'Conversion', from: 'KSH', to: 'DC', amount: 100, date: '2025-10-30', status: 'Completed', flow: 'credit' },
+            { id: 't3', type: 'Send', amount: 50, currency: 'DC', toUser: '+254712...', date: '2025-10-30', status: 'Completed', flow: 'debit' },
+            { id: 't4', type: 'Withdraw', amount: 200, currency: 'KSH', date: '2025-10-29', status: 'Pending', flow: 'debit' },
+        ];
+
+
+        // --- UI RENDERING FUNCTIONS ---
+
+        function updateUI() {
+            // 1. Update Balances
+            document.getElementById('balance-ksh').textContent = balances.KSH.toFixed(2);
+            document.getElementById('balance-dc').textContent = balances.DC.toFixed(2);
+
+            // 2. Update Profile Cards
+            const cardsList = document.getElementById('credit-cards-list');
+            cardsList.innerHTML = profile.creditCards.map(card => 
+                `<li>- **${card.type}** ending in ${card.lastFour}</li>`
+            ).join('');
+
+            // 3. Render Transactions
+            const listContainer = document.getElementById('transactions-list');
+            if (transactions.length === 0) {
+                listContainer.innerHTML = '<p style="text-align: center; color: #6c757d;">No transactions yet.</p>';
+                return;
+            }
+            
+            listContainer.innerHTML = transactions.map(tx => {
+                let displayAmount;
+                let txType = tx.type;
+                let iconClass;
+                let currency = tx.currency || tx.to;
+
+                if (tx.type === 'Deposit') {
+                    displayAmount = `+${tx.amount.toFixed(2)} ${currency}`;
+                    iconClass = 'fas fa-arrow-circle-down';
+                } else if (tx.type === 'Withdraw' || tx.type === 'Send') {
+                    displayAmount = `-${tx.amount.toFixed(2)} ${currency}`;
+                    iconClass = tx.type === 'Withdraw' ? 'fas fa-arrow-circle-up' : 'fas fa-paper-plane';
+                } else if (tx.type === 'Conversion') {
+                    // Show conversion details
+                    const dcAmount = (tx.amount / EXCHANGE_RATE).toFixed(2);
+                    displayAmount = `+${dcAmount} DC`;
+                    txType = `Convert ${tx.amount.toFixed(2)} KSH`;
+                    iconClass = 'fas fa-exchange-alt';
+                }
+
+                const amountClass = (tx.flow === 'credit') ? 'credit' : 'debit';
+
+                return `
+                    <div class="transaction-item">
+                        <i class="${iconClass}" style="font-size: 20px; color: #6c757d;"></i>
+                        <div class="transaction-details">
+                            <div class="transaction-type">${txType}</div>
+                            <div class="transaction-date">${tx.date}</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div class="transaction-amount ${amountClass}">${displayAmount}</div>
+                            <div class="status">${tx.status}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+
+        // --- MODAL AND ACTION FUNCTIONS ---
+
+        function openModal(actionType) {
+            const modal = document.getElementById('actionModal');
+            document.getElementById('modalTitle').textContent = actionType;
+            const modalBody = document.getElementById('modalBody');
+
+            // Set the content based on the action
+            switch (actionType) {
+                case 'Deposit':
+                case 'Withdraw':
+                    modalBody.innerHTML = generateDepositWithdrawForm(actionType);
+                    break;
+                case 'Convert':
+                    modalBody.innerHTML = generateConvertForm();
+                    // Attach event listener for real-time conversion update
+                    document.getElementById('kshAmount').addEventListener('input', updateDCPreview);
+                    break;
+                case 'Send':
+                    modalBody.innerHTML = generateSendForm();
+                    break;
+            }
+
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('actionModal').style.display = 'none';
+        }
+
+        function generateDepositWithdrawForm(type) {
+            const isDeposit = type === 'Deposit';
+            const sourceTargetLabel = isDeposit ? 'Deposit Source (M-Pesa)' : 'Withdraw Target';
+            const btnText = `${type} KSH Now`;
+            
+            return `
+                <form onsubmit="handleAction(event, '${type}')">
+                    <div class="form-group">
+                        <label for="amount">Amount in KSH</label>
+                        <input type="number" id="amount" name="amount" min="1" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label>${sourceTargetLabel}</label>
+                        <div class="readonly-field">${profile.phoneNumber}</div>
+                    </div>
+                    <button type="submit" class="btn-submit">${btnText}</button>
+                </form>
+            `;
+        }
+
+        function generateConvertForm() {
+            return `
+                <form onsubmit="handleAction(event, 'Convert')">
+                    <div class="form-group">
+                        <label for="kshAmount">KSH Amount (Max: ${balances.KSH.toFixed(2)})</label>
+                        <input type="number" id="kshAmount" name="kshAmount" min="1" step="0.01" required>
+                    </div>
+                    
+                    <div class="conversion-info">
+                        Conversion Rate: 1 DC = ${EXCHANGE_RATE} KSH
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>You Will Receive DC</label>
+                        <div id="dcPreview" class="readonly-field">0.00</div>
+                    </div>
+
+                    <button type="submit" class="btn-submit">Convert Now</button>
+                </form>
+            `;
+        }
+        
+        function updateDCPreview() {
+            const kshInput = document.getElementById('kshAmount');
+            const ksh = parseFloat(kshInput.value);
+            const dcPreview = document.getElementById('dcPreview');
+
+            if (ksh > 0) {
+                dcPreview.textContent = (ksh / EXCHANGE_RATE).toFixed(2);
+            } else {
+                dcPreview.textContent = '0.00';
+            }
+        }
+
+        function generateSendForm() {
+            return `
+                <form onsubmit="handleAction(event, 'Send')">
+                    <div class="form-group">
+                        <label for="dcAmount">DC Amount (Max: ${balances.DC.toFixed(2)})</label>
+                        <input type="number" id="dcAmount" name="dcAmount" min="0.01" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="recipient">Recipient Phone No. or User ID</label>
+                        <input type="text" id="recipient" name="recipient" required placeholder="+2547XXXXXXXX or UserID">
+                    </div>
+                    <button type="submit" class="btn-submit">Send DC Now</button>
+                </form>
+            `;
+        }
+
+
+        // --- TRANSACTION HANDLER ---
+
+        function handleAction(event, actionType) {
+            event.preventDefault();
+            
+            const form = event.target;
+            const formData = new FormData(form);
+            let amount = parseFloat(formData.get('amount') || formData.get('dcAmount') || formData.get('kshAmount'));
+            let recipient = formData.get('recipient');
+            
+            if (isNaN(amount) || amount <= 0) {
+                alert("Please enter a valid amount.");
+                return;
+            }
+
+            let newTransaction = {
+                id: `t${Date.now()}`,
+                date: new Date().toISOString().split('T')[0],
+                status: 'Completed',
+            };
+
+            // Backend Simulation and State Update
+            switch (actionType) {
+                case 'Deposit':
+                    // Real M-Pesa API Call happens here (Backend required!)
+                    balances.KSH += amount;
+                    newTransaction.type = 'Deposit';
+                    newTransaction.currency = 'KSH';
+                    newTransaction.amount = amount;
+                    newTransaction.flow = 'credit';
+                    alert(`DEPOSIT initiated: KSH ${amount.toFixed(2)} from M-Pesa. Processing time needed.`);
+                    break;
+                case 'Withdraw':
+                    if (amount > balances.KSH) {
+                        alert("Error: Insufficient KSH balance.");
+                        return;
+                    }
+                    // Real Bank Transfer API Call happens here (Backend required!)
+                    balances.KSH -= amount;
+                    newTransaction.type = 'Withdraw';
+                    newTransaction.currency = 'KSH';
+                    newTransaction.amount = amount;
+                    newTransaction.flow = 'debit';
+                    alert(`WITHDRAWAL initiated: KSH ${amount.toFixed(2)} to Bank. Processing time needed.`);
+                    break;
+                case 'Convert':
+                    if (amount > balances.KSH) {
+                        alert("Error: Insufficient KSH balance for conversion.");
+                        return;
+                    }
+                    const dcReceived = amount / EXCHANGE_RATE;
+                    balances.KSH -= amount;
+                    balances.DC += dcReceived;
+                    newTransaction.type = 'Conversion';
+                    newTransaction.from = 'KSH';
+                    newTransaction.to = 'DC';
+                    newTransaction.amount = amount; // Logging KSH spent
+                    newTransaction.flow = 'credit';
+                    alert(`CONVERSION successful: KSH ${amount.toFixed(2)} converted to DC ${dcReceived.toFixed(2)}.`);
+                    break;
+                case 'Send':
+                    if (amount > balances.DC) {
+                        alert("Error: Insufficient DC balance.");
+                        return;
+                    }
+                    if (!recipient) {
+                        alert("Error: Recipient is required.");
+                        return;
+                    }
+                    // Backend P2P DC Transfer happens here (Database update required!)
+                    balances.DC -= amount;
+                    newTransaction.type = 'Send';
+                    newTransaction.currency = 'DC';
+                    newTransaction.amount = amount;
+                    newTransaction.toUser = recipient;
+                    newTransaction.flow = 'debit';
+                    alert(`SEND successful: DC ${amount.toFixed(2)} sent to ${recipient}.`);
+                    break;
+            }
+
+            transactions.unshift(newTransaction);
+            updateUI();
+            closeModal();
+        }
+
+        // Initialize UI on page load
+        window.onload = updateUI;
+
+    </script>
+</body>
+</html>
