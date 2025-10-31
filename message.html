@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day Coin Messenger: Connect & Transact</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<style>
+/* --- CSS STYLES --- */
+:root {
+--whatsapp-green: #075E54;
+--whatsapp-light-green: #128C7E;
+--bubble-sent: #DCF8C6;
+--bubble-received: #FFFFFF;
+--background-color: #ECE5DD;
+--text-color: #1F2937;
+--font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+--dashboard-blue: #007bff;
+}
+
+body {
+font-family: var(--font-family);
+margin: 0;
+padding: 0;
+background-color: #f0f2f5;
+display: flex;
+justify-content: center;
+align-items: center;
+min-height: 100vh;
+}
+
+.messenger-container {
+width: 100%;
+max-width: 1000px;
+height: 90vh;
+max-height: 800px;
+background-color: var(--background-color);
+display: flex;
+box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+border-radius: 10px;
+overflow: hidden;
+}
+
+/* --- Sidebar (Chat List) --- */
+.sidebar {
+width: 35%;
+min-width: 300px;
+background-color: #fff;
+border-right: 1px solid #ddd;
+display: flex;
+flex-direction: column;
+}
+
+.sidebar-header {
+background-color: var(--whatsapp-green);
+color: #fff;
+padding: 15px;
+display: flex;
+align-items: center;
+justify-content: space-between;
+}
+
+.dashboard-btn {
+background-color: var(--dashboard-blue);
+color: white;
+border: none;
+padding: 8px 12px;
+border-radius: 5px;
+cursor: pointer;
+font-size: 0.9em;
+text-decoration: none;
+transition: background-color 0.3s;
+}
+
+.dashboard-btn:hover {
+background-color: #0056b3;
+}
+
+.chat-list {
+overflow-y: auto;
+flex-grow: 1;
+}
+
+.chat-item {
+display: flex;
+padding: 15px;
+align-items: center;
+border-bottom: 1px solid #eee;
+cursor: pointer;
+transition: background-color 0.2s;
+}
+
+.chat-item:hover, .chat-item.active {
+background-color: #f0f0f0;
+}
+
+.chat-avatar {
+width: 50px;
+height: 50px;
+border-radius: 50%;
+margin-right: 15px;
+background-color: #ccc;
+display: flex;
+justify-content: center;
+align-items: center;
+color: #fff;
+font-weight: bold;
+}
+
+.chat-details {
+flex-grow: 1;
+}
+
+.chat-name {
+font-weight: bold;
+color: var(--text-color);
+}
+
+.chat-preview {
+font-size: 0.9em;
+color: #666;
+white-space: nowrap;
+overflow: hidden;
+text-overflow: ellipsis;
+}
+
+/* --- Chat Window --- */
+.chat-window {
+width: 65%;
+display: flex;
+flex-direction: column;
+}
+
+.chat-header {
+background-color: var(--whatsapp-light-green);
+color: #fff;
+padding: 15px;
+display: flex;
+align-items: center;
+}
+
+.chat-header-details {
+margin-left: 15px;
+}
+
+.chat-title {
+font-weight: bold;
+font-size: 1.2em;
+}
+
+.chat-status {
+font-size: 0.9em;
+opacity: 0.9;
+}
+
+.message-area {
+flex-grow: 1;
+padding: 20px 10px;
+overflow-y: auto;
+background-image: url('https://user-images.githubusercontent.com/15075759/28719142-86fa9210-737bb6-11e7-9115-602977800046.png'); /* WhatsApp-like background */
+}
+
+.message-bubble {
+max-width: 60%;
+padding: 8px 12px;
+border-radius: 8px;
+margin-bottom: 10px;
+line-height: 1.4;
+word-wrap: break-word;
+box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.13);
+}
+
+.sent {
+background-color: var(--bubble-sent);
+margin-left: auto;
+margin-right: 10px;
+text-align: right;
+border-bottom-right-radius: 0;
+}
+
+.received {
+background-color: var(--bubble-received);
+margin-right: auto;
+margin-left: 10px;
+text-align: left;
+border-bottom-left-radius: 0;
+}
+
+.message-text {
+color: var(--text-color);
+}
+
+.message-time {
+font-size: 0.7em;
+color: #777;
+margin-top: 5px;
+display: block;
+}
+
+.input-area {
+padding: 10px;
+background-color: #f0f0f0;
+display: flex;
+align-items: center;
+}
+
+.input-area input {
+flex-grow: 1;
+padding: 12px 15px;
+border-radius: 20px;
+border: none;
+margin-right: 10px;
+font-size: 1em;
+box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.send-btn {
+background-color: var(--whatsapp-light-green);
+color: white;
+border: none;
+width: 45px;
+height: 45px;
+border-radius: 50%;
+cursor: pointer;
+transition: background-color 0.3s;
+}
+
+.send-btn:hover {
+background-color: var(--whatsapp-green);
+}
+
+/* --- Mobile Responsiveness --- */
+@media (max-width: 768px) {
+.messenger-container {
+height: 100vh;
+max-height: 100%;
+max-width: 100%;
+border-radius: 0;
+}
+.sidebar {
+display: none; /* Hide chat list on small screens */
+}
+.chat-window {
+width: 100%;
+}
+.dashboard-btn {
+padding: 5px 8px;
+}
+}
+</style>
+</head>
+<body>
+
+<div class="messenger-container">
+
+<div class="sidebar">
+<div class="sidebar-header">
+<h3>Day Coin Chats</h3>
+<a href="Dashboard.html" class="dashboard-btn" id="dashboard-link">
+<i class="fas fa-arrow-left"></i> Dashboard
+</a>
+</div>
+
+<div class="chat-list">
+<div class="chat-item active" data-chat="seller">
+<div class="chat-avatar" style="background-color: #E74C3C;"><i class="fas fa-store"></i></div>
+<div class="chat-details">
+<div class="chat-name">Seller: Alpha Gear</div>
+<div class="chat-preview">Buyer question: Is the NFT authentic?</div>
+</div>
+</div>
+<div class="chat-item" data-chat="gaming">
+<div class="chat-avatar" style="background-color: #2ECC71;"><i class="fas fa-headset"></i></div>
+<div class="chat-details">
+<div class="chat-name">Day Coin Gaming Guild</div>
+<div class="chat-preview">New player joined! Type '/challenge' to play.</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="chat-window">
+<div class="chat-header">
+<div class="chat-avatar" style="background-color: #E74C3C;"><i class="fas fa-store"></i></div>
+<div class="chat-header-details">
+<div class="chat-title" id="chat-title">Seller: Alpha Gear</div>
+<div class="chat-status">Last seen 5 minutes ago</div>
+</div>
+</div>
+
+<div class="message-area" id="message-area">
+</div>
+
+<div class="input-area">
+<input type="text" id="message-input" placeholder="Type a message or command..." autofocus>
+<button class="send-btn" id="send-button"><i class="fas fa-paper-plane"></i></button>
+</div>
+</div>
+</div>
+
+<script>
+/* --- JAVASCRIPT LOGIC --- */
+
+const messageArea = document.getElementById('message-area');
+const messageInput = document.getElementById('message-input');
+const sendButton = document.getElementById('send-button');
+const chatTitle = document.getElementById('chat-title');
+const chatItems = document.querySelectorAll('.chat-item');
+
+let activeChat = 'seller'; // Default chat
+
+// --- Message Data for Simulation ---
+const chatHistory = {
+seller: [
+{ type: 'received', text: 'Hello! I\'m interested in the "Legendary Sword NFT". What is the minimum Day Coin price you will accept?', time: '10:00 AM' },
+{ type: 'sent', text: 'Thanks for your interest! The minimum is 500 DAY, but I can do 480 DAY if you complete the transaction in the next hour.', time: '10:05 AM' },
+{ type: 'received', text: 'That sounds fair. Can you confirm the authenticity of the smart contract address?', time: '10:08 AM' }
+],
+gaming: [
+{ type: 'received', text: 'Welcome to the Day Coin Gaming Guild! Type /help for commands, or /balance to check your wallet.', time: 'Yesterday' },
+{ type: 'sent', text: '/balance', time: '11:30 AM' },
+{ type: 'received', text: 'Guild Bot: Your current Day Coin balance is 1,250 DAY.', time: '11:31 AM' }
+]
+};
+
+// --- Core Functions ---
+
+function renderMessages(chatId) {
+messageArea.innerHTML = ''; // Clear current messages
+const messages = chatHistory[chatId];
+messages.forEach(msg => {
+const bubble = document.createElement('div');
+bubble.classList.add('message-bubble', msg.type);
+bubble.innerHTML = `<span class="message-text">${msg.text}</span><span class="message-time">${msg.time}</span>`;
+messageArea.appendChild(bubble);
+});
+// Scroll to bottom
+messageArea.scrollTop = messageArea.scrollHeight;
+}
+
+function createMessage(text, type) {
+const now = new Date();
+const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+// 1. Add to history
+chatHistory[activeChat].push({ type, text, time });
+
+// 2. Update UI
+const bubble = document.createElement('div');
+bubble.classList.add('message-bubble', type);
+bubble.innerHTML = `<span class="message-text">${text}</span><span class="message-time">${time}</span>`;
+messageArea.appendChild(bubble);
+
+// 3. Scroll to bottom
+messageArea.scrollTop = messageArea.scrollHeight;
+}
+
+function handleCommand(command) {
+const lowerCommand = command.toLowerCase().trim();
+const botResponses = {
+'/challenge': 'Game Bot: CHALLENGE ACCEPTED! Your opponent is "Alpha Prime". Battle starts in 10 seconds. Good luck!',
+'/help': 'Guild Bot: Available commands are /balance, /challenge, and /trade. Use Day Coin for all in-game actions.',
+'/balance': 'Guild Bot: Your current Day Coin balance is 1,250 DAY. (Simulated Response)',
+'/trade': 'Guild Bot: Opening Day Coin Trade Marketplace. (Simulated link to trading interface)',
+'/confirm480': 'Seller: Deal confirmed at 480 DAY! Please send 480 DAY to smart contract: 0xDAYc01n... (Transaction will be verified automatically in a real system).',
+'default': 'Bot: Command not recognized. Type /help for a list of available commands.'
+};
+
+const response = botResponses[lowerCommand] || botResponses['default'];
+
+// Wait a moment for a "typing" effect
+setTimeout(() => {
+createMessage(response, 'received');
+}, 800);
+}
+
+function sendMessage() {
+const text = messageInput.value.trim();
+if (text === '') return;
+
+// 1. Send the user's message
+createMessage(text, 'sent');
+messageInput.value = '';
+
+// 2. Check for commands (for the gaming chat demo)
+if (activeChat === 'gaming' && text.startsWith('/')) {
+handleCommand(text);
+} else if (activeChat === 'seller') {
+// 3. Simulate a quick seller response for e-commerce
+if (text.toLowerCase().includes('confirm') || text.toLowerCase().includes('deal')) {
+handleCommand('/confirm480'); // Use a specific seller command
+} else {
+setTimeout(() => {
+createMessage('Seller: Received! I\'ll check that for you and get back to you shortly.', 'received');
+}, 1200);
+}
+}
+}
+
+// --- Event Listeners ---
+
+sendButton.addEventListener('click', sendMessage);
+messageInput.addEventListener('keypress', (e) => {
+if (e.key === 'Enter') {
+sendMessage();
+}
+});
+
+// Chat switching functionality
+chatItems.forEach(item => {
+item.addEventListener('click', () => {
+// 1. Update active state in sidebar
+chatItems.forEach(i => i.classList.remove('active'));
+item.classList.add('active');
+
+// 2. Switch chat data
+activeChat = item.dataset.chat;
+chatTitle.textContent = item.querySelector('.chat-name').textContent;
+
+// 3. Render new chat history
+renderMessages(activeChat);
+
+// 4. Update header avatar (simple color change demo)
+const newAvatarColor = item.querySelector('.chat-avatar').style.backgroundColor;
+document.querySelector('.chat-header .chat-avatar').style.backgroundColor = newAvatarColor;
+document.querySelector('.chat-header .chat-avatar').innerHTML = item.querySelector('.chat-avatar').innerHTML;
+});
+});
+
+// --- Initialization ---
+// Load the default chat when the page loads
+renderMessages(activeChat);
+
+// Optional: Update dashboard link to go to a proper path (assumes dashboard is one level up)
+document.getElementById('dashboard-link').href = 'Dashboard.html';
+
+</script>
+</body>
+</html>
